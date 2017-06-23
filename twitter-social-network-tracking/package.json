@@ -1,0 +1,30 @@
+{
+  "name": "social-network-tracking",
+  "version": "1.0.0",
+  "description": "Rastreamento de informações no Facebook",
+  "main": "server.js",
+  "scripts": {
+    "start": "babel-node server.js"
+  },
+
+  "author": "Fernando J Santos",
+  "license": "ISC",
+  
+  "dependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
+    "body-parser": "^1.13.2",
+    "connect-ensure-login": "^0.1.1",
+    "consign": "^0.1.2",
+    "cookie-parser": "^1.3.5",
+    "ejs": "^2.3.3",
+    "express": "^4.13.1",
+    "express-session": "^1.11.3",
+    "morgan": "^1.6.1",
+    "passport": "^0.2.2",
+    "passport-twitter": "^1.0.4",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
+  }
+
+}
