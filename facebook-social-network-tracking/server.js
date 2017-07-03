@@ -4,15 +4,17 @@ import consign from "consign";
 import request from "request-promise";
 
 // Módulos PassportJS
-import passport           from "passport";
-import FacebookStrategy   from "passport-facebook";
+import passport from "passport";
+import FacebookStrategy from "passport-facebook";
 
 //Preparação das variáveis principais
 const PORT = 80;
-const app  = express();
+const app = express();
 
 // Configuração básica do app
 app.set("json spaces", 4);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 
 // Organização de carregamento de módulos
 consign()
@@ -22,30 +24,30 @@ consign()
 
 //Configuração PassportJS para as redes sociais
 passport.use(new FacebookStrategy({
-    clientID: app.facebook.env.CLIENT_ID,
-    clientSecret: app.facebook.env.CLIENT_SECRET,
-    callbackURL: 'http://localhost/login/facebook/return',
-    profileFields: app.facebook.env.PROFILE_FIELDS
-  },
-  
-  function(accessToken, refreshToken, profile, cb) {
-        
-	app.mainInfo = {
-		AccessToken: accessToken,
-		Profile: profile,
-		RefreshToken: refreshToken
-	}
+	clientID: app.facebook.env.CLIENT_ID,
+	clientSecret: app.facebook.env.CLIENT_SECRET,
+	callbackURL: 'http://localhost/login/facebook/return',
+	profileFields: app.facebook.env.PROFILE_FIELDS
+},
 
-    return cb(null, profile, refreshToken, profile);
+	function (accessToken, refreshToken, profile, cb) {
 
-  }));
+		app.mainInfo = {
+			AccessToken: accessToken,
+			Profile: profile,
+			RefreshToken: refreshToken
+		}
 
-passport.serializeUser(function(user, cb) {
-  cb(null, user);
+		return cb(null, profile, refreshToken, profile);
+
+	}));
+
+passport.serializeUser(function (user, cb) {
+	cb(null, user);
 });
 
-passport.deserializeUser(function(obj, cb) {
-  cb(null, obj);
+passport.deserializeUser(function (obj, cb) {
+	cb(null, obj);
 });
 
 // Utilização de middleware para 
@@ -59,21 +61,21 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveU
 app.use(passport.initialize());
 app.use(passport.session());
 
-	app.get('/facebook/login',
-		passport.authenticate('facebook',{
+app.get('/facebook/login',
+	passport.authenticate('facebook', {
 		scope: app.facebook.env.SCOPE
 	}));
 
-	app.get('/login/facebook/return', 
-		passport.authenticate('facebook', { failureRedirect: '/facebook/login/error' }),
-		function(req, res) {
-			res.json(req.user);
-		}
-	);
+app.get('/login/facebook/return',
+	passport.authenticate('facebook', { failureRedirect: '/facebook/login/error' }),
+	function (req, res) {
+		res.render("index", { retorno: JSON.stringify(app.mainInfo) });
+	}
+);
 
-	app.get('/logout', function(req, res){
-		req.logout();
-		res.redirect('/');
-	});
+app.get('/logout', function (req, res) {
+	req.logout();
+	res.redirect('/');
+});
 
 app.listen(PORT, () => console.log(`Teste de log utilizando a porta ${PORT}`));

@@ -1,15 +1,18 @@
-module.exports = app =>{
+module.exports = app => {
     app.facebook = {
         env: {
             CLIENT_ID: '264000670733766',
             CLIENT_SECRET: '64211f4398069ccb80904446e46ca4b3',
             SCOPE: [
+                'email',
                 'publish_actions',
                 'publish_pages',
                 'manage_pages',
                 'user_photos',
                 'user_posts',
+                'user_videos',
                 'user_likes',
+                'user_location',
                 'pages_messaging',
                 'pages_messaging_subscriptions',
                 'pages_show_list',
